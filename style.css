@@ -1,0 +1,11 @@
+body {
+    background-color: #f0e8d8; /* 页面整体背景柔和的颜色，类似浅色木头 */
+}
+
+#chessboard {
+    background-image: url('https://i.imgur.com/Uv0s3iP.jpg'); /* 木头纹理图片链接 */
+    background-size: cover;
+    background-position: center;
+    border: 3px solid #654321; /* 深色边框更有木质感 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
