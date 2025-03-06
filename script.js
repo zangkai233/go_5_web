@@ -2,18 +2,20 @@ const socket = io('https://go-5-web.onrender.com'); // 确保这里的地址正�
 
 const canvas = document.getElementById('chessboard');
 const context = canvas.getContext('2d');
-const resetButton = document.getElementById('resetGame'); // 获取按钮
-const size = 15; // 棋盘尺寸
+const resetButton = document.getElementById('resetGame'); 
+const emojiButton = document.getElementById('sendEmoji'); 
+const emojiImg = document.getElementById('emoji');
+const size = 15;
 const cellSize = canvas.width / size;
 let board = Array(size).fill().map(() => Array(size).fill(null));
-let myColor = null; // 存储当前用户的颜色
+let myColor = null; 
 
 // 绘制棋盘
 function drawBoard() {
-    context.fillStyle = "#DEB887"; // 木头色背景
+    context.fillStyle = "#DEB887";
     context.fillRect(0, 0, canvas.width, canvas.height);
     
-    context.strokeStyle = "black"; // 棋盘线条
+    context.strokeStyle = "black";
     for (let i = 0; i <= size; i++) {
         context.beginPath();
         context.moveTo(i * cellSize, 0);
@@ -22,14 +24,6 @@ function drawBoard() {
         context.lineTo(canvas.width, i * cellSize);
         context.stroke();
     }
-}
-
-// 绘制棋子
-function drawPiece(x, y, isBlack) {
-    context.beginPath();
-    context.arc((x + 0.5) * cellSize, (y + 0.5) * cellSize, cellSize / 2.5, 0, 2 * Math.PI);
-    context.fillStyle = isBlack ? 'black' : 'white';
-    context.fill();
 }
 
 // 监听服务器分配的颜色
@@ -46,13 +40,12 @@ socket.on('spectator', () => {
 
 // 处理点击事件（仅允许当前玩家下棋）
 canvas.addEventListener('click', (e) => {
-    if (!myColor || myColor === 'spectator') return; // 观战者无法下棋
+    if (!myColor || myColor === 'spectator') return; 
 
     const x = Math.floor(e.offsetX / cellSize);
     const y = Math.floor(e.offsetY / cellSize);
     if (board[x][y] !== null) return;
 
-    // 发送数据给服务器
     socket.emit('move', { x, y });
 });
 
@@ -69,13 +62,26 @@ socket.on('notYourTurn', () => {
 
 // 监听“刷新游戏”事件，交换颜色并清空棋盘
 socket.on('resetGame', () => {
-    board = Array(size).fill().map(() => Array(size).fill(null)); // 清空棋盘
+    board = Array(size).fill().map(() => Array(size).fill(null));
     drawBoard();
 });
 
 // 点击按钮，向服务器发送“重置游戏”请求
 resetButton.addEventListener('click', () => {
     socket.emit('resetGame');
+});
+
+// 🎉 监听发送表情包事件
+emojiButton.addEventListener('click', () => {
+    socket.emit('sendEmoji');
+});
+
+// 监听服务器广播的表情包事件，显示表情
+socket.on('sendEmoji', () => {
+    emojiImg.style.display = 'block'; // 显示表情
+    setTimeout(() => {
+        emojiImg.style.display = 'none'; // 3秒后隐藏
+    }, 3000);
 });
 
 socket.on('connect', () => {

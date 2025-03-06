@@ -7,16 +7,26 @@
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <style>
         body {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             background-color: #f3eacb;
             font-family: Arial, sans-serif;
         }
-        h1 {
-            margin-bottom: 10px;
+        .game-container {
+            display: flex;
+            align-items: center;
         }
         canvas {
-            background-color: #DEB887; /* 棋盘背景颜色 */
+            background-color: #DEB887;
             border: 2px solid black;
+        }
+        .controls {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         button {
             margin-top: 10px;
@@ -31,14 +41,29 @@
         button:hover {
             background-color: #45a049;
         }
+        #emoji-container {
+            margin-top: 20px;
+            height: 80px;
+        }
+        .emoji {
+            width: 80px;
+            height: 80px;
+            display: none; /* 默认不显示 */
+        }
     </style>
 </head>
 <body>
 
-    <h1>在线五子棋</h1>
-    <canvas id="chessboard" width="450" height="450"></canvas>
-    <br>
-    <button id="resetGame">刷新游戏</button>
+    <div class="game-container">
+        <canvas id="chessboard" width="450" height="450"></canvas>
+        <div class="controls">
+            <button id="resetGame">刷新游戏</button>
+            <button id="sendEmoji">发送表情</button>
+            <div id="emoji-container">
+                <img id="emoji" class="emoji" src="images/goblin-emoji.gif" alt="Emoji">
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 
