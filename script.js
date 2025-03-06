@@ -5,14 +5,14 @@ const context = canvas.getContext('2d');
 const size = 15; // 棋盘尺寸
 const cellSize = canvas.width / size;
 let board = Array(size).fill().map(() => Array(size).fill(null));
-let isBlack = true; // 黑棋先行
+let myColor = null; // 存储当前用户的颜色
 
 // 绘制棋盘
 function drawBoard() {
-    context.fillStyle = "#DEB887"; // 背景色改为木头色
+    context.fillStyle = "#DEB887"; // 木头色背景
     context.fillRect(0, 0, canvas.width, canvas.height);
     
-    context.strokeStyle = "black"; // 棋盘线条颜色
+    context.strokeStyle = "black"; // 棋盘线条
     for (let i = 0; i <= size; i++) {
         context.beginPath();
         context.moveTo(i * cellSize, 0);
@@ -31,26 +31,39 @@ function drawPiece(x, y, isBlack) {
     context.fill();
 }
 
-// 处理点击事件
+// 监听服务器分配的颜色
+socket.on('assignColor', (color) => {
+    myColor = color;
+    alert(`你被分配为 ${color === 'black' ? '黑棋' : '白棋'}`); // 提示玩家他们的颜色
+});
+
+// 如果房间已满，则进入观战模式
+socket.on('spectator', () => {
+    myColor = 'spectator';
+    alert('房间已满，你正在观战');
+});
+
+// 处理点击事件（仅允许当前玩家下棋）
 canvas.addEventListener('click', (e) => {
+    if (!myColor || myColor === 'spectator') return; // 观战者无法下棋
+
     const x = Math.floor(e.offsetX / cellSize);
     const y = Math.floor(e.offsetY / cellSize);
     if (board[x][y] !== null) return;
-    
-    board[x][y] = isBlack;
-    drawPiece(x, y, isBlack);
-    
-    // 发送棋子数据到服务器
-    socket.emit('move', { x, y, isBlack });
 
-    isBlack = !isBlack;
+    // 发送数据给服务器
+    socket.emit('move', { x, y });
 });
 
-// 监听来自服务器的棋子落子事件
+// 监听服务器广播的棋子落子事件
 socket.on('move', ({ x, y, isBlack }) => {
-    console.log(`收到对手的落子: x=${x}, y=${y}, 颜色=${isBlack ? '黑' : '白'}`);
     board[x][y] = isBlack;
     drawPiece(x, y, isBlack);
+});
+
+// 监听非当前回合落子的情况
+socket.on('notYourTurn', () => {
+    alert('现在不是你的回合，请等待对手落子');
 });
 
 socket.on('connect', () => {
