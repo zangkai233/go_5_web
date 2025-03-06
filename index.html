@@ -1,15 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>在线五子棋</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            background-color: #f3eacb;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        canvas {
+            background-color: #DEB887; /* 棋盘背景颜色 */
+            border: 2px solid black;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
+
     <h1>在线五子棋</h1>
-    <canvas id="chessboard" width="600" height="600"></canvas>
-    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <canvas id="chessboard" width="450" height="450"></canvas>
+    <br>
+    <button id="resetGame">刷新游戏</button>
+
     <script src="script.js"></script>
+
 </body>
 </html>
