@@ -38,9 +38,18 @@ io.on('connection', (socket) => {
         currentTurn = currentTurn === 'black' ? 'white' : 'black';
     });
 
-    // 监听 `resetGame` 事件，清空棋盘
+    // 监听 `resetGame` 事件，交换玩家颜色并清空棋盘
     socket.on('resetGame', () => {
-        console.log('游戏被重置');
+        console.log('游戏被重置，交换玩家颜色');
+
+        if (users.length === 2) {
+            // 交换颜色
+            users.forEach(user => {
+                user.color = user.color === 'black' ? 'white' : 'black';
+                io.to(user.id).emit('assignColor', user.color); // 通知玩家他们的新颜色
+            });
+        }
+
         io.emit('resetGame');
         currentTurn = 'black'; // 重置回合
     });
