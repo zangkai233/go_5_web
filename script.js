@@ -2,6 +2,7 @@ const socket = io('https://go-5-web.onrender.com'); // 确保这里的地址正�
 
 const canvas = document.getElementById('chessboard');
 const context = canvas.getContext('2d');
+const resetButton = document.getElementById('resetGame'); // 获取按钮
 const size = 15; // 棋盘尺寸
 const cellSize = canvas.width / size;
 let board = Array(size).fill().map(() => Array(size).fill(null));
@@ -64,6 +65,17 @@ socket.on('move', ({ x, y, isBlack }) => {
 // 监听非当前回合落子的情况
 socket.on('notYourTurn', () => {
     alert('现在不是你的回合，请等待对手落子');
+});
+
+// 监听“刷新游戏”事件
+socket.on('resetGame', () => {
+    board = Array(size).fill().map(() => Array(size).fill(null)); // 清空棋盘
+    drawBoard();
+});
+
+// 点击按钮，向服务器发送“重置游戏”请求
+resetButton.addEventListener('click', () => {
+    socket.emit('resetGame');
 });
 
 socket.on('connect', () => {
