@@ -35,7 +35,7 @@ function drawPiece(x, y, isBlack) {
 // 监听服务器分配的颜色
 socket.on('assignColor', (color) => {
     myColor = color;
-    alert(`你被分配为 ${color === 'black' ? '黑棋' : '白棋'}`); // 提示玩家他们的颜色
+    alert(`你现在的颜色是: ${color === 'black' ? '黑棋' : '白棋'}`);
 });
 
 // 如果房间已满，则进入观战模式
@@ -67,7 +67,7 @@ socket.on('notYourTurn', () => {
     alert('现在不是你的回合，请等待对手落子');
 });
 
-// 监听“刷新游戏”事件
+// 监听“刷新游戏”事件，交换颜色并清空棋盘
 socket.on('resetGame', () => {
     board = Array(size).fill().map(() => Array(size).fill(null)); // 清空棋盘
     drawBoard();
