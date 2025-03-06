@@ -38,6 +38,13 @@ io.on('connection', (socket) => {
         currentTurn = currentTurn === 'black' ? 'white' : 'black';
     });
 
+    // 监听 `resetGame` 事件，清空棋盘
+    socket.on('resetGame', () => {
+        console.log('游戏被重置');
+        io.emit('resetGame');
+        currentTurn = 'black'; // 重置回合
+    });
+
     // 处理断线
     socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);
