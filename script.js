@@ -1,4 +1,5 @@
-const socket = io('https://your-socket-server.com'); // 替换为您的 Socket 服务器地址
+const socket = io('https://go-5-web.onrender.com'); // 已替换为你的公网服务器地址
+
 const canvas = document.getElementById('chessboard');
 const context = canvas.getContext('2d');
 const size = 15; // 棋盘尺寸
@@ -41,6 +42,10 @@ canvas.addEventListener('click', (e) => {
 socket.on('move', ({ x, y, isBlack }) => {
     board[x][y] = isBlack;
     drawPiece(x, y, isBlack);
+});
+
+socket.on('connect', () => {
+    console.log('成功连接到公网服务器！');
 });
 
 drawBoard();
